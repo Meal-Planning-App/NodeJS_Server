@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 const axios = require('axios');
 
-const gymDates = [false, true, false, true, false, true, false];
-
 app.use(express.json());
 
 app.get('/', function(req, res) {
@@ -19,6 +17,38 @@ function adaptCaloricIntake(preferences, caloric_intake) {
 		caloric_intake -= 300;
 	}
 	return caloric_intake;
+}
+
+function calculate_ingredients(weekly_meals) {
+
+	// console.log(weekly_meals[0][4]);
+
+	ingredients = {};
+
+	weekly_meals.forEach(daily_meals => {
+		daily_meals.forEach(meal => {
+			// console.log(meal.ingredient);
+			for (const [key, value] of Object.entries(meal.ingredient[0])) {
+
+				var left_bracket = key.indexOf("(");
+
+				if(left_bracket != -1) {
+					var product = key.substring(0, left_bracket);
+
+					console.log(product);
+
+					if(ingredients.hasOwnProperty(product)) {
+						ingredients[product] += parseFloat(value);
+					} else {
+						ingredients[product] = parseFloat(value);
+					}
+				}
+		  	}		
+		});
+	});
+
+	return ingredients;
+	// console.log(ingredients);
 }
 
 app.post('/plan_meals', async (req, res) => {
@@ -43,7 +73,9 @@ app.post('/plan_meals', async (req, res) => {
 
 		caloric_intake = adaptCaloricIntake(person.preferences, caloric_intake);
 
-		if(!gymDates[i]) {
+		console.log(person);
+
+		if(!person.gymDates[i]) {
 			caloric_intake -= 200;
 		}
 
@@ -56,19 +88,24 @@ app.post('/plan_meals', async (req, res) => {
 		};
 	}
 
-	console.log(weekly_macros);
+	// console.log(weekly_macros);
 
 	let response = 0;
 
 	try {
-		response = await axios.post('http://4e438fac.ngrok.io/get_recipes',  {
+		response = await axios.post('http://58ff1ca8.ngrok.io/get_recipes',  {
 		 	data: weekly_macros
 		});
 	} catch(error) {
 		console.log(error);
 	}
 
-	res.json(response.data);
+	final_result = {
+		"ingredients_list" :  calculate_ingredients(response.data),
+		"weekly_recipes" : response.data
+	}
+
+	res.json(final_result);
 });
 
 const port = process.env.PORT || 3000;
