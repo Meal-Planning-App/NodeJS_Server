@@ -20,22 +20,17 @@ function adaptCaloricIntake(preferences, caloric_intake) {
 }
 
 function calculate_ingredients(weekly_meals) {
-
-	// console.log(weekly_meals[0][4]);
-
 	ingredients = {};
 
 	weekly_meals.forEach(daily_meals => {
 		daily_meals.forEach(meal => {
-			// console.log(meal.ingredient);
+
 			for (const [key, value] of Object.entries(meal.ingredient[0])) {
 
 				var left_bracket = key.indexOf("(");
 
 				if(left_bracket != -1) {
 					var product = key.substring(0, left_bracket);
-
-					console.log(product);
 
 					if(ingredients.hasOwnProperty(product)) {
 						ingredients[product] += parseFloat(value);
@@ -48,7 +43,6 @@ function calculate_ingredients(weekly_meals) {
 	});
 
 	return ingredients;
-	// console.log(ingredients);
 }
 
 app.post('/plan_meals', async (req, res) => {
@@ -72,8 +66,6 @@ app.post('/plan_meals', async (req, res) => {
 		}
 
 		caloric_intake = adaptCaloricIntake(person.preferences, caloric_intake);
-
-		console.log(person);
 
 		if(!person.gymDates[i]) {
 			caloric_intake -= 200;
