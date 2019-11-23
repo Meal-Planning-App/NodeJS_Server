@@ -5,7 +5,7 @@ const axios = require('axios');
 app.use(express.json());
 
 app.get('/', function(req, res) {
-	res.send("This is my new app.")
+	res.send("This is the nodejs server.")
 });
 
 function adaptCaloricIntake(preferences, caloric_intake) {
@@ -38,7 +38,7 @@ function calculate_ingredients(weekly_meals) {
 						ingredients[product] = parseFloat(value);
 					}
 				}
-		  	}		
+		  	}
 		});
 	});
 
@@ -85,7 +85,7 @@ app.post('/plan_meals', async (req, res) => {
 	let response = 0;
 
 	try {
-		response = await axios.post('http://58ff1ca8.ngrok.io/get_recipes',  {
+		response = await axios.post('https://meal-planning-app-259900.appspot.com/get_recipes',  {
 		 	data: weekly_macros
 		});
 	} catch(error) {
@@ -102,31 +102,3 @@ app.post('/plan_meals', async (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
