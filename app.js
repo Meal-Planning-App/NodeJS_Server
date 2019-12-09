@@ -5,7 +5,7 @@ const axios = require('axios');
 app.use(express.json());
 
 app.get('/', function(req, res) {
-	res.send("This is the nodejs server.")
+	res.send("This is your nodejs server.")
 });
 
 function adaptCaloricIntake(preferences, caloric_intake) {
@@ -101,4 +101,6 @@ app.post('/plan_meals', async (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port);
+const hostname = '0.0.0.0';
+
+app.listen(port, hostname);
