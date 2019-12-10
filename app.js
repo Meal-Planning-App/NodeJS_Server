@@ -85,7 +85,7 @@ app.post('/plan_meals', async (req, res) => {
 	let response = 0;
 
 	try {
-		response = await axios.post('https://meal-planning-app-259900.appspot.com/get_recipes',  {
+		response = await axios.post('https://flask-server-261600.appspot.com/get_recipes',  {
 		 	data: weekly_macros
 		});
 	} catch(error) {
